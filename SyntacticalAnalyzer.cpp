@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cstdlib>
 #include "SyntacticalAnalyzer.h"
+#include "CodeGenerator.h"
 
 using namespace std;
 
@@ -10,6 +11,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 {
   string name = filename;
   lex = new LexicalAnalyzer (filename);
+  gen = new CodeGenerator (filename);
   string p2name = name.substr (0, name.length()-3) + ".p2";
   p2file.open(p2name);
   token_type t;

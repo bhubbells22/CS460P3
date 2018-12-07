@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <fstream>
-#include "LexicalAnalyzer.h"
 
 using namespace std;
 
@@ -14,7 +13,6 @@ class CodeGen
 	~CodeGen ();
 	void WriteCode (int tabs, string code);
     private:
-	LexicalAnalyzer * lex;
 	ofstream cpp;
 };
 	

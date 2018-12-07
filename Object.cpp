@@ -428,17 +428,33 @@ Object Object::operator / (const Object & O) const
 	if (type == INT)
 	{
 		if (O.type == INT)
+		{
+			if (O.intval == 0)
+				throw "division by 0";
 			return Object (intval / O.intval);
+		}
 		if (O.type == REAL)
+		{
+			if (O.realval == 0)
+				throw "division by 0";
 			return Object (intval / O.realval);
+		}
 		throw "";
 	}
 	if (type == REAL)
 	{
 		if (O.type == INT)
+		{
+			if (O.intval == 0)
+				throw "division by 0";
 			return Object (realval / O.intval);
+		}
 		if (O.type == REAL)
+		{
+			if (O.realval == 0)
+				throw "division by 0";
 			return Object (realval / O.realval);
+		}
 		throw "";
 	}
 	throw "";
@@ -457,6 +473,8 @@ Object Object::operator % (const Object & O) const
     {
 	if (type == INT && O.type == INT)
 	{
+		if (O.intval == 0)
+			throw "modulo by 0";
 		return Object (intval % O.intval);
 	}
 	throw "";
@@ -525,8 +543,8 @@ bool nullp (const Object & O)
 
 bool stringp (const Object & O) 
 {
-	//if (O.type == STRING)
-	//	return true;
+	if (O.type == STRING)
+		return true;
 	return false;
 }
 
@@ -594,9 +612,9 @@ Object round (const Object & O)
     try
     {
 	int r = 0;
-	if (O.type != INT)
+	if (O.type == INT)
 		r = O.intval;
-	else if (O.type != REAL)
+	else if (O.type == REAL)
 		r = O.realval + 0.5;
 	else 
 		throw "type";
