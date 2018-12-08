@@ -11,7 +11,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 {
   string name = filename;
   lex = new LexicalAnalyzer (filename);
-  gen = new CodeGenerator (filename);
+  gen = new CodeGen (name);
   string p2name = name.substr (0, name.length()-3) + ".p2";
   p2file.open(p2name);
   token_type t;
@@ -62,6 +62,7 @@ int SyntacticalAnalyzer::program()
     }
   tok = lex->GetTokenName(token);
   p2file << "Exiting Program function; current token is: " << tok << endl;
+  delete gen;
   return errors;
 }
 
