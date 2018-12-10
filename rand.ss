@@ -1,3 +1,8 @@
+(define (other)
+  4
+  )
+
+
 (define (main)
 	(display (+ 12 5))
 	(newline)
@@ -5,4 +10,7 @@
 	(newline)
 	(display (+ "abc" 5))
 	(newline)
-)
+	)
+
+
+(main)

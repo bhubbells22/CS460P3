@@ -128,15 +128,23 @@ int SyntacticalAnalyzer::define()
 	  token = lex->GetToken();
 	  if (token == IDENT_T)
 	    {
+	      lexeme = lex-> GetLexeme();
+	      if(lexeme == "main")
+		gen->WriteCode(0, "int " + lexeme + "(");
+	      else
+		gen->WriteCode(0, "Object " + lexeme + "(");
 	      token = lex->GetToken();
 	      errors += param_list();
 	      if (token == RPAREN_T)
 		{
+		  gen->WriteCode(0,")\n{\n");
 		  token = lex->GetToken();
 		  errors += stmt();
 		  errors += stmt_list();
-		  if (token == RPAREN_T)
+		  if (token == RPAREN_T){
+		    gen->WriteCode(0, "}\n");
 		    token = lex->GetToken();
+		  }
 		  else
 		    {
 		      lex->ReportError ("right parenthesis expected, '" + lex->GetTokenName(token) + "' found.");
@@ -243,11 +251,13 @@ int SyntacticalAnalyzer::literal()
   if (token == NUMLIT_T)
     { // apply rule 10
       p2file << "Using Rule 10\n";
+      gen->WriteCode(0, "Object(" + lexeme + ")");
       token = lex->GetToken();
     }
   else if (token == STRLIT_T)
     { // apply rule 11
       p2file << "Using Rule 11\n";
+      gen->WriteCode(0, "Object(" + lexeme + ")");
       token = lex->GetToken();
     }
   else if (token == SQUOTE_T)
@@ -447,6 +457,7 @@ int SyntacticalAnalyzer::action()
     case IF_T:
       // apply rule 24
       p2file << "Using Rule 24\n";
+      gen->WriteCode(0, "if(");
       token = lex->GetToken();
       errors += stmt();
       errors += stmt();
@@ -472,6 +483,7 @@ int SyntacticalAnalyzer::action()
     // apply rules 26, 30-35, 41, 48
     case LISTOP_T:
       p2file << "Using Rule 26\n";
+      gen->WriteCode(0, lexeme + "(");
       token = lex->GetToken();
       errors += stmt();
       break;
@@ -512,6 +524,7 @@ int SyntacticalAnalyzer::action()
       break;
     case DISPLAY_T:
       p2file << "Using Rule 48\n";
+      gen->WriteCode(0, "cout << ");
       token = lex->GetToken();
       errors += stmt();
       break;
@@ -599,6 +612,7 @@ int SyntacticalAnalyzer::action()
     case NEWLINE_T:
       // apply rule 49
       p2file << "Using Rule 49\n";
+      gen->WriteCode(0, "cout << endl;\n");
       token = lex->GetToken();
       break;
 
@@ -624,6 +638,8 @@ int SyntacticalAnalyzer::any_other_token()
     { // apply rule 50
       p2file << "Using Rule 50\n";
       token = lex->GetToken();
+      lexeme = lex->GetLexeme();
+      gen->WriteCode(0,"(\"" + lexeme);
       errors += more_tokens();
       if (token == RPAREN_T)
 	{
