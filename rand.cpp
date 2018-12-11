@@ -6,11 +6,16 @@ using namespace std;
 
 Object other()
 {
-Object(4);
-;
+	Object(4);
 }
+
 int main()
 {
-cout << Object(12) + Object(5);
-cout << endlcout << Object("abc") + Object("xyz")cout << endlcout << Object("abc") + Object(5)cout << endl;
+	cout << Object(12) + Object(5);
+	cout << endl;
+	cout << Object("abc") + Object("xyz");
+	cout << endl;
+	cout << Object("abc") + Object(5);
+	cout << endl;
 }
+

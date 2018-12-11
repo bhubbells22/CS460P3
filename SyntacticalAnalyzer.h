@@ -32,6 +32,8 @@ class SyntacticalAnalyzer
 	int stmt_pair_body();
 	int action();
 	int any_other_token();
+	int numStmtCalls;
+	int numTabs;
 };
 	
 #endif

@@ -15,6 +15,8 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
   string p2name = name.substr (0, name.length()-3) + ".p2";
   p2file.open(p2name);
   token_type t;
+  numStmtCalls = 0;
+  numTabs = 0;
   int errors = program();
 }
 
@@ -91,6 +93,7 @@ int SyntacticalAnalyzer::more_defines()
     { // apply rule 3
       p2file << "Using Rule 3\n";
       token = lex->GetToken();
+      numStmtCalls = 0;
       errors += stmt_list("");
       if (token == RPAREN_T)
 	token = lex->GetToken();
@@ -130,23 +133,27 @@ int SyntacticalAnalyzer::define()
 	    {
 	      lexeme = lex-> GetLexeme();
 	      if(lexeme == "main")
-		gen->WriteCode(0, "int " + lexeme + "(");
+		gen->WriteCode(numTabs, "int " + lexeme + "(");
 	      else
-		gen->WriteCode(0, "Object " + lexeme + "(");
+		gen->WriteCode(numTabs, "Object " + lexeme + "(");
 	      token = lex->GetToken();
 	      errors += param_list();
 	      if (token == RPAREN_T)
 		{
-		  gen->WriteCode(0,")\n{\n");
+		  gen->WriteCode(numTabs,")\n{\n");
+		  numTabs++;
 		  token = lex->GetToken();
+		  numStmtCalls = 0;
 		  errors += stmt();
-		  //gen->WriteCode(0, ";\n");
+		  //gen->WriteCode(numTabs, ";\n");
 		  errors += stmt_list("");
-		  //gen->WriteCode(0, ";\n");
-		  if (token == RPAREN_T){
-		    gen->WriteCode(0, "}\n");
-		    token = lex->GetToken();
-		  }
+		  //gen->WriteCode(numTabs, ";\n");
+		  if (token == RPAREN_T)
+		    {
+		      numTabs--;
+		      gen->WriteCode(numTabs, "}\n\n");
+		      token = lex->GetToken();
+		    }
 		  else
 		    {
 		      lex->ReportError ("right parenthesis expected, '" + lex->GetTokenName(token) + "' found.");
@@ -191,12 +198,14 @@ int SyntacticalAnalyzer::stmt_list(string op)
     { // apply rule 5
       p2file << "Using Rule 5\n";
       errors += stmt();
+      //gen->WriteCode(numTabs, ";\n");
       gen->WriteCode(0, op);
       errors += stmt_list("");
+      //gen->WriteCode(numTabs, ";\n");
     }
   else if (token == RPAREN_T)
     { // apply rule 6
-      //gen->WriteCode(0, ";0\n");
+      //gen->WriteCode(numTabs, ";0\n");
       //p2file << "\n0\n";
       p2file << "Using Rule 6\n";
     }
@@ -212,6 +221,7 @@ int SyntacticalAnalyzer::stmt_list(string op)
 
 int SyntacticalAnalyzer::stmt()
 {
+  numStmtCalls++;
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
   p2file << "Entering Stmt function; current token is: " << tok << ", lexeme: " << lexeme << endl;
   int errors = 0;
@@ -248,6 +258,8 @@ int SyntacticalAnalyzer::stmt()
       lex->ReportError ("NUMLIT_T, STRLIT_T, SQUOTE_T, IDENT_T, or LPAREN_T expected, '" + lex->GetTokenName(token) + "' found.");
       errors++;
     }
+  if (--numStmtCalls == 0)
+    gen->WriteCode(0, ";\n");
   tok = lex->GetTokenName(token);
   p2file << "Exiting Stmt function; current token is: " << tok << endl;
   return errors;
@@ -258,6 +270,8 @@ int SyntacticalAnalyzer::literal()
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
   p2file << "Entering Literal function; current token is: " << tok << ", lexeme: " << lexeme << endl;
   int errors = 0;
+  if (numStmtCalls == 1)
+    gen->WriteCode(1, "");
   if (token == NUMLIT_T)
     { // apply rule 10
       p2file << "Using Rule 10\n";
@@ -467,7 +481,7 @@ int SyntacticalAnalyzer::action()
     case IF_T:
       // apply rule 24
       p2file << "Using Rule 24\n";
-      gen->WriteCode(0, "if(");
+      gen->WriteCode(numTabs++, "if(");
       token = lex->GetToken();
       errors += stmt();
       errors += stmt();
@@ -534,7 +548,7 @@ int SyntacticalAnalyzer::action()
       break;
     case DISPLAY_T:
       p2file << "Using Rule 48\n";
-      gen->WriteCode(0, "cout << ");
+      gen->WriteCode(numTabs, "cout << ");
       token = lex->GetToken();
       errors += stmt();
       break;
@@ -622,7 +636,7 @@ int SyntacticalAnalyzer::action()
     case NEWLINE_T:
       // apply rule 49
       p2file << "Using Rule 49\n";
-      gen->WriteCode(0, "cout << endl");
+      gen->WriteCode(numTabs, "cout << endl");
       token = lex->GetToken();
       break;
 
