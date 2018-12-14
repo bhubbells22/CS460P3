@@ -1,0 +1,98 @@
+Input file: rand.ss
+   1: (define (other)
+	LPAREN_T        (
+	DEFINE_T        define
+	LPAREN_T        (
+	IDENT_T         other
+	RPAREN_T        )
+   2:   4
+	NUMLIT_T        4
+   3:   )
+	RPAREN_T        )
+   4: 
+   5: 
+   6: (define (main)
+	LPAREN_T        (
+	DEFINE_T        define
+	LPAREN_T        (
+	IDENT_T         main
+	RPAREN_T        )
+   7: 	(display (+ 12 5))
+	LPAREN_T        (
+	DISPLAY_T       display
+	LPAREN_T        (
+	PLUS_T          +
+	NUMLIT_T        12
+	NUMLIT_T        5
+	RPAREN_T        )
+	RPAREN_T        )
+   8: 	(newline)
+	LPAREN_T        (
+	NEWLINE_T       newline
+	RPAREN_T        )
+   9: 	(display (+ "abc" "xyz"))
+	LPAREN_T        (
+	DISPLAY_T       display
+	LPAREN_T        (
+	PLUS_T          +
+	STRLIT_T        "abc"
+	STRLIT_T        "xyz"
+	RPAREN_T        )
+	RPAREN_T        )
+  10: 	(newline)
+	LPAREN_T        (
+	NEWLINE_T       newline
+	RPAREN_T        )
+  11: 	(display (+ "abc" 5))
+	LPAREN_T        (
+	DISPLAY_T       display
+	LPAREN_T        (
+	PLUS_T          +
+	STRLIT_T        "abc"
+	NUMLIT_T        5
+	RPAREN_T        )
+	RPAREN_T        )
+  12: 	(newline)
+	LPAREN_T        (
+	NEWLINE_T       newline
+	RPAREN_T        )
+  13: 	(display (* 5 3))
+	LPAREN_T        (
+	DISPLAY_T       display
+	LPAREN_T        (
+	MULT_T          *
+	NUMLIT_T        5
+	NUMLIT_T        3
+	RPAREN_T        )
+	RPAREN_T        )
+  14: 	(newline)
+	LPAREN_T        (
+	NEWLINE_T       newline
+	RPAREN_T        )
+  15: 	(display (car '(a b c)))
+	LPAREN_T        (
+	DISPLAY_T       display
+	LPAREN_T        (
+	LISTOP_T        car
+	SQUOTE_T        '
+	LPAREN_T        (
+	IDENT_T         a
+	IDENT_T         b
+	IDENT_T         c
+	RPAREN_T        )
+	RPAREN_T        )
+	RPAREN_T        )
+  16: 	(newline)
+	LPAREN_T        (
+	NEWLINE_T       newline
+	RPAREN_T        )
+  17: 	)
+	RPAREN_T        )
+  18: 
+  19: 
+  20: (main)
+	LPAREN_T        (
+	IDENT_T         main
+	RPAREN_T        )
+	EOF_T           
+0 errors found in input file

@@ -1,0 +1,158 @@
+Input file: P3T1-1.ss
+   1: (define (add l1 l2)
+	LPAREN_T        (
+	DEFINE_T        define
+	LPAREN_T        (
+	IDENT_T         add
+	IDENT_T         l1
+	IDENT_T         l2
+	RPAREN_T        )
+   2:   (if (and (not (null? l1)) (not (null? l2)) )
+	LPAREN_T        (
+	IF_T            if
+	LPAREN_T        (
+	AND_T           and
+	LPAREN_T        (
+	NOT_T           not
+	LPAREN_T        (
+	NULLP_T         null?
+	IDENT_T         l1
+	RPAREN_T        )
+	RPAREN_T        )
+	LPAREN_T        (
+	NOT_T           not
+	LPAREN_T        (
+	NULLP_T         null?
+	IDENT_T         l2
+	RPAREN_T        )
+	RPAREN_T        )
+	RPAREN_T        )
+   3:       (if (and (list? l1) (list? l2))
+	LPAREN_T        (
+	IF_T            if
+	LPAREN_T        (
+	AND_T           and
+	LPAREN_T        (
+	LISTP_T         list?
+	IDENT_T         l1
+	RPAREN_T        )
+	LPAREN_T        (
+	LISTP_T         list?
+	IDENT_T         l2
+	RPAREN_T        )
+	RPAREN_T        )
+   4: 	  (cons (car l1) (cdr l2))
+	LPAREN_T        (
+	CONS_T          cons
+	LPAREN_T        (
+	LISTOP_T        car
+	IDENT_T         l1
+	RPAREN_T        )
+	LPAREN_T        (
+	LISTOP_T        cdr
+	IDENT_T         l2
+	RPAREN_T        )
+	RPAREN_T        )
+   5: 	  'add_requires_not_null_lists
+	SQUOTE_T        '
+	IDENT_T         add_requires_not_null_lists
+   6: 	  )
+	RPAREN_T        )
+   7:       'add_requires_not_null_lists
+	SQUOTE_T        '
+	IDENT_T         add_requires_not_null_lists
+   8:       )
+	RPAREN_T        )
+   9:   )
+	RPAREN_T        )
+  10: 
+  11: (define (multiply num1 num2)
+	LPAREN_T        (
+	DEFINE_T        define
+	LPAREN_T        (
+	IDENT_T         multiply
+	IDENT_T         num1
+	IDENT_T         num2
+	RPAREN_T        )
+  12:   (if (or (zero? num1) (zero? num2))
+	LPAREN_T        (
+	IF_T            if
+	LPAREN_T        (
+	OR_T            or
+	LPAREN_T        (
+	ZEROP_T         zero?
+	IDENT_T         num1
+	RPAREN_T        )
+	LPAREN_T        (
+	ZEROP_T         zero?
+	IDENT_T         num2
+	RPAREN_T        )
+	RPAREN_T        )
+  13:       'multiply_requires_non_zero_numbers
+	SQUOTE_T        '
+	IDENT_T         multiply_requires_non_zero_numbers
+  14:       (* num1 num2)
+	LPAREN_T        (
+	MULT_T          *
+	IDENT_T         num1
+	IDENT_T         num2
+	RPAREN_T        )
+  15:       )
+	RPAREN_T        )
+  16:   )
+	RPAREN_T        )
+  17: 
+  18: (define (main)
+	LPAREN_T        (
+	DEFINE_T        define
+	LPAREN_T        (
+	IDENT_T         main
+	RPAREN_T        )
+  19:   (display (add '(1 2 3 4 5) '(a b c d e)) ) (newline)
+	LPAREN_T        (
+	DISPLAY_T       display
+	LPAREN_T        (
+	IDENT_T         add
+	SQUOTE_T        '
+	LPAREN_T        (
+	NUMLIT_T        1
+	NUMLIT_T        2
+	NUMLIT_T        3
+	NUMLIT_T        4
+	NUMLIT_T        5
+	RPAREN_T        )
+	SQUOTE_T        '
+	LPAREN_T        (
+	IDENT_T         a
+	IDENT_T         b
+	IDENT_T         c
+	IDENT_T         d
+	IDENT_T         e
+	RPAREN_T        )
+	RPAREN_T        )
+	RPAREN_T        )
+	LPAREN_T        (
+	NEWLINE_T       newline
+	RPAREN_T        )
+  20:   (display (multiply 21 13)) (newline)
+	LPAREN_T        (
+	DISPLAY_T       display
+	LPAREN_T        (
+	IDENT_T         multiply
+	NUMLIT_T        21
+	NUMLIT_T        13
+	RPAREN_T        )
+	RPAREN_T        )
+	LPAREN_T        (
+	NEWLINE_T       newline
+	RPAREN_T        )
+  21:   )
+	RPAREN_T        )
+  22: 
+  23: (main)
+	LPAREN_T        (
+	IDENT_T         main
+	RPAREN_T        )
+  24:   
+	EOF_T           
+0 errors found in input file
