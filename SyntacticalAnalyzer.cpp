@@ -137,7 +137,7 @@ int SyntacticalAnalyzer::define()
 	      else
 		gen->WriteCode(numTabs, "Object " + lexeme + "(");
 	      token = lex->GetToken();
-	      errors += param_list();
+	      errors += param_list(true);
 	      if (token == RPAREN_T)
 		{
 		  gen->WriteCode(numTabs,")\n{\n");
@@ -342,7 +342,7 @@ int SyntacticalAnalyzer::more_tokens()
   return errors;
 }
 
-int SyntacticalAnalyzer::param_list()
+int SyntacticalAnalyzer::param_list(bool firstCall)
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
   p2file << "Entering Param_List function; current token is: " << tok << ", lexeme: " << lexeme << endl;
@@ -350,8 +350,12 @@ int SyntacticalAnalyzer::param_list()
   if (token == IDENT_T)
     { // apply rule 16
       p2file << "Using Rule 16\n";
+      if (firstCall == true)
+	gen->WriteCode(0, "Object " + lex->GetLexeme());
+      else
+	gen->WriteCode(0, ", Object " + lex->GetLexeme());
       token = lex->GetToken();
-      errors += param_list();
+      errors += param_list(false);
     }
   else if (token == RPAREN_T)
     { // apply rule 17
