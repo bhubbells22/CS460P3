@@ -17,6 +17,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
   token_type t;
   numStmtCalls = 0;
   numTabs = 0;
+  int ifCalls= 0;
   int errors = program();
 }
 
@@ -497,10 +498,14 @@ int SyntacticalAnalyzer::action()
       errors += stmt();
       gen->WriteCode(0, ")\n");
       gen->WriteCode(numTabs++, "{\n");
+      numStmtCalls = 0;
       errors += stmt();
+      gen->WriteCode(0, "\n");
       gen->WriteCode(--numTabs, "}\n");
-      gen->WriteCode(numTabs++, "else\n{\n");
+      gen->WriteCode(numTabs, "else\n");
+      gen->WriteCode(numTabs++, "{\n");
       errors += else_part();
+      gen->WriteCode(0, ";\n");
       gen->WriteCode(--numTabs, "}\n");
       break;
 

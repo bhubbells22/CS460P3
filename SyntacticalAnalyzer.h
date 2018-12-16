@@ -34,6 +34,7 @@ class SyntacticalAnalyzer
 	int any_other_token();
 	int numStmtCalls;
 	int numTabs;
+	int ifCalls;
 };
 	
 #endif

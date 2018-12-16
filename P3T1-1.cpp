@@ -4,32 +4,40 @@
 #include "Object.h"
 using namespace std;
 
-Object add(, l1, l2)
+Object add(Object l1, Object l2)
 {
 	if(((!(nullp(l1())) && (!(nullp(l2()))))
 	{
 		if(((listp(l1()) && (listp(l2())))
 		{
-(cons (car (l1()))(cdr (l2())))		}
+(cons (car (l1()))(cdr (l2())));
+
+		}
 		else
-{
-			("add_requires_not_null_lists")		}
+		{
+				("add_requires_not_null_lists");
+;
+		}
+
 	}
 	else
-{
-		("add_requires_not_null_lists")	}
-;
+	{
+		("add_requires_not_null_lists");
+	}
 }
 
-Object multiply(, num1, num2)
+Object multiply(Object num1, Object num2)
 {
 	if(((zerop(num1()) || (zerop(num2())))
 	{
-		("multiply_requires_non_zero_numbers")	}
+			("multiply_requires_non_zero_numbers");
+
+	}
 	else
-{
-(num1() * num2())	}
+	{
+(num1() * num2());
 ;
+	}
 }
 
 int main()
