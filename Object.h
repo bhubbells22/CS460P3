@@ -2,11 +2,19 @@
 // File: Object.h
 // Author: Dr. Watts
 // Desciption: Object class for Scheme to C++ translation
+/********************************************************************************/
+/* CS460 Project 3 - Team 1: Justin Moore, Robert Hubbell, Justin Bernard       */
+/********************************************************************************/
 
 #include <iostream>
 #include <sstream>
 #include <vector>
 using namespace std;
+
+
+/********************************************************************************/
+/* Functions and variables for Object class                                     */
+/********************************************************************************/
 
 enum obj_type {NONE, INT, REAL, STRING, LIST};
 	

@@ -1,11 +1,14 @@
 /*******************************************************************************
-* Assignment: Project 1 - Lexical Analyzer for Scheme to C++ Translator        *
+* Assignment: Project 3 - Lexical Analyzer for Scheme to C++ Translator        *
 * Author: Dr. Watts                                                            *
 * Date: Fall 2018                                                              *
 * File: LexicalAnalyzer.cpp                                                    *
 *                                                                              *
-* Description: This file contains the                                          *
+* Description: This file contains the function implementations for Lex class   *
 *******************************************************************************/
+/********************************************************************************/
+/* CS460 Project 3 - Team 1: Justin Moore, Robert Hubbell, Justin Bernard       */
+/********************************************************************************/
 
 #include <iomanip>
 #include <cstdlib>
@@ -56,11 +59,14 @@ static int table [][21] =
 	{ 8,  8, 11, 13,  8,  8, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,  8, 20, 20}}; // 13 r seen - is it the end of a listop?
 
 /*******************************************************************************
-* Function:                                                                    *
+* Function: LexicalAnalyzer constructor                                        *
 *                                                                              *
-* Parameters:                                                                  *
-* Return value:                                                                *
-* Description: This function will                                              *
+* Parameters: char * filename                                                  *
+* Return value: None                                                           *
+* Description: This function will read in the filename passed to it, and use it*
+* to set the filenames for the output files it will write to.  The appropriate *
+* filetype extension will be appended to these output files.  It also sets up  *
+* our private variables, including our symbols map.                            *
 *******************************************************************************/
 
 LexicalAnalyzer::LexicalAnalyzer (char * filename)
@@ -127,11 +133,12 @@ LexicalAnalyzer::LexicalAnalyzer (char * filename)
 }
 
 /*******************************************************************************
-* Function:                                                                    *
+* Function: LexicalAnalyzer destructor                                         *
 *                                                                              *
-* Parameters:                                                                  *
-* Return value:                                                                *
-* Description: This function will                                              *
+* Parameters: None                                                             *
+* Return value: None                                                           *
+* Description: This function will close the input, write the resulting number  *
+* of errors to the output files, then close the output files                   *
 *******************************************************************************/
 
 LexicalAnalyzer::~LexicalAnalyzer ()
@@ -145,11 +152,14 @@ LexicalAnalyzer::~LexicalAnalyzer ()
 }
 
 /*******************************************************************************
-* Function:                                                                    *
+* Function: GetToken                                                           *
 *                                                                              *
-* Parameters:                                                                  *
-* Return value:                                                                *
-* Description: This function will                                              *
+* Parameters: None                                                             *
+* Return value: token_type                                                     *
+* Description: This function will parse through the input, setting the         *
+* token types appropriately as it goes.  It will also be reporting the line    *
+* numbers, line of code, token types and lexemes to our p2 and lst files.      *
+* When it's done, it returns the current token it found.                       *
 *******************************************************************************/
 
 token_type LexicalAnalyzer::GetToken ()
@@ -264,11 +274,12 @@ token_type LexicalAnalyzer::GetToken ()
 }
 
 /*******************************************************************************
-* Function:                                                                    *
+* Function: GetTokenName                                                       *
 *                                                                              *
-* Parameters:                                                                  *
-* Return value:                                                                *
-* Description: This function will                                              *
+* Parameters: token_type t                                                     *
+* Return value: string                                                         *
+* Description: This function will read in a token_type passed to it, and use   *
+* that to determine and return the appropriate name of that token as a string  *
 *******************************************************************************/
 
 string LexicalAnalyzer::GetTokenName (token_type t) const
@@ -277,11 +288,12 @@ string LexicalAnalyzer::GetTokenName (token_type t) const
 }
 
 /*******************************************************************************
-* Function:                                                                    *
+* Function: GetLexeme                                                          *
 *                                                                              *
-* Parameters:                                                                  *
-* Return value:                                                                *
-* Description: This function will                                              *
+* Parameters: None                                                             *
+* Return value: string                                                         *
+* Description: This function will return the current value of lexeme that was  *
+* set by GetToken                                                              *
 *******************************************************************************/
 
 string LexicalAnalyzer::GetLexeme () const
@@ -290,11 +302,12 @@ string LexicalAnalyzer::GetLexeme () const
 }
 
 /*******************************************************************************
-* Function:                                                                    *
+* Function: ReportError                                                        *
 *                                                                              *
-* Parameters:                                                                  *
-* Return value:                                                                *
-* Description: This function will                                              *
+* Parameters: const string & msg                                               *
+* Return value: void                                                           *
+* Description: This function will write out an error message to our listing    *
+* and debug files, as well as increment errors                                 *
 *******************************************************************************/
 
 void LexicalAnalyzer::ReportError (const string & msg)

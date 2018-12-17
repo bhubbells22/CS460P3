@@ -1,3 +1,7 @@
+/********************************************************************************/
+/* CS460 P3 - Team1: Justin Moore, Robert Hubbell, Justin Bernard               */
+/********************************************************************************/
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -7,6 +11,14 @@
 
 using namespace std;
 
+/********************************************************************************/
+/* Function: SyntacticalAnalyzer constructor                                    */
+/* Parameters: char * filename                                                  */
+/* Return type: None                                                            */
+/* Description: Reads in the filename to set up output file name with           */
+/* appropriate filetype extension.  Also sets up LexicalAnalyzer and CodeGen    */
+/* with the filename, and sets some private variables                           */
+/********************************************************************************/
 SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 {
   string name = filename;
@@ -21,12 +33,25 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
   int errors = program();
 }
 
+/********************************************************************************/
+/* Function: SyntacticalAnalyzer destructor                                     */
+/* Parameters: None                                                             */
+/* Return type: None                                                            */
+/* Description: Delete lex and gen                                              */
+/********************************************************************************/
 SyntacticalAnalyzer::~SyntacticalAnalyzer ()
 {
   delete lex;
   delete gen;
 }
 
+/********************************************************************************/
+/* Function: program                                                            */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Looks for the first LPAREN to begin grammar checking and reports*/
+/* an error where appropriate                                                   */
+/********************************************************************************/
 int SyntacticalAnalyzer::program()
 {
   int errors = 0;
@@ -69,6 +94,12 @@ int SyntacticalAnalyzer::program()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: more_defines                                                       */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for more_defines               */
+/********************************************************************************/
 int SyntacticalAnalyzer::more_defines()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -118,6 +149,12 @@ int SyntacticalAnalyzer::more_defines()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: define                                                             */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for define                     */
+/********************************************************************************/
 int SyntacticalAnalyzer::define()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -189,6 +226,12 @@ int SyntacticalAnalyzer::define()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: stmt_list                                                          */
+/* Parameters: string op                                                        */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for stmt_list                  */
+/********************************************************************************/
 int SyntacticalAnalyzer::stmt_list(string op)
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -216,6 +259,12 @@ int SyntacticalAnalyzer::stmt_list(string op)
   return errors;
 }
 
+/********************************************************************************/
+/* Function: stmt                                                               */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for stmt                       */
+/********************************************************************************/
 int SyntacticalAnalyzer::stmt()
 {
   numStmtCalls++;
@@ -261,7 +310,12 @@ int SyntacticalAnalyzer::stmt()
   p2file << "Exiting Stmt function; current token is: " << tok << endl;
   return errors;
 }
-
+/********************************************************************************/
+/* Function: literal                                                            */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for literal                    */
+/********************************************************************************/
 int SyntacticalAnalyzer::literal()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -297,6 +351,12 @@ int SyntacticalAnalyzer::literal()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: quoted_lit                                                         */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for quoted_lit                 */
+/********************************************************************************/
 int SyntacticalAnalyzer::quoted_lit()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -317,6 +377,12 @@ int SyntacticalAnalyzer::quoted_lit()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: more_tokens                                                        */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for more_tokens                */
+/********************************************************************************/
 int SyntacticalAnalyzer::more_tokens()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -342,6 +408,12 @@ int SyntacticalAnalyzer::more_tokens()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: param_list                                                         */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for param_list                 */
+/********************************************************************************/
 int SyntacticalAnalyzer::param_list(bool firstCall)
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -371,6 +443,12 @@ int SyntacticalAnalyzer::param_list(bool firstCall)
   return errors;
 }
 
+/********************************************************************************/
+/* Function: else_part                                                          */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for else_part                  */
+/********************************************************************************/
 int SyntacticalAnalyzer::else_part()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -396,6 +474,12 @@ int SyntacticalAnalyzer::else_part()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: stmt_pair                                                          */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for stmt_pair                  */
+/********************************************************************************/
 int SyntacticalAnalyzer::stmt_pair()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -422,6 +506,12 @@ int SyntacticalAnalyzer::stmt_pair()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: stmt_pair_body                                                     */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for stmt_pair_body             */
+/********************************************************************************/
 int SyntacticalAnalyzer::stmt_pair_body()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -482,6 +572,12 @@ int SyntacticalAnalyzer::stmt_pair_body()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: action                                                             */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for action                     */
+/********************************************************************************/
 int SyntacticalAnalyzer::action()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
@@ -722,6 +818,12 @@ int SyntacticalAnalyzer::action()
   return errors;
 }
 
+/********************************************************************************/
+/* Function: any_other_token                                                    */
+/* Parameters: None                                                             */
+/* Return type: int                                                             */
+/* Description: Follows and checks grammar rules for any_other_token            */
+/********************************************************************************/
 int SyntacticalAnalyzer::any_other_token()
 {
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();

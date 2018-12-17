@@ -1,3 +1,7 @@
+/********************************************************************************/
+/* CS460 P3 - Team1: Justin Moore, Robert Hubbell, Justin Bernard               */
+/********************************************************************************/
+
 #include "Object.h"
 #include <sstream>
 #include <cstdlib>
@@ -7,12 +11,18 @@
 
 string nameof [] = {"unknown", "integer", "real", "string", "list"};
 
+/********************************************************************************/
+/* Object default constructor                                                   */
+/********************************************************************************/
 Object::Object()
 {
 	type = NONE;
 	intval = realval = 0;
 }
 
+/********************************************************************************/
+/* Object int constuctor                                                        */
+/********************************************************************************/
 Object::Object (const int & value)
 {
 	type = INT;
@@ -21,6 +31,9 @@ Object::Object (const int & value)
 	MakeName ();
 }
 
+/********************************************************************************/
+/* Object double constructor                                                    */
+/********************************************************************************/
 Object::Object (const double & value)
 {
 	type = REAL;
@@ -29,6 +42,9 @@ Object::Object (const double & value)
 	MakeName ();
 }
 
+/********************************************************************************/
+/* Object string constructor                                                    */
+/********************************************************************************/
 Object::Object (const string & value)
 {
 	type = NONE;
@@ -71,6 +87,9 @@ Object::Object (const string & value)
 	*this = Object (ss);
 }
 
+/********************************************************************************/
+/* == operator implementation                                                   */
+/********************************************************************************/
 bool Object::operator == (const Object & O) const
 {
     try
@@ -120,6 +139,9 @@ bool Object::operator == (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* != implementation                                                            */
+/********************************************************************************/
 bool Object::operator != (const Object & O) const
 {
     try
@@ -169,6 +191,9 @@ bool Object::operator != (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* < implementation                                                             */
+/********************************************************************************/
 bool Object::operator < (const Object & O) const
 {
     try
@@ -205,6 +230,9 @@ bool Object::operator < (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* <= implementation                                                            */
+/********************************************************************************/
 bool Object::operator <= (const Object & O) const
 {
     try
@@ -241,6 +269,9 @@ bool Object::operator <= (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* > implementation                                                             */
+/********************************************************************************/
 bool Object::operator > (const Object & O) const
 {
     try
@@ -277,6 +308,9 @@ bool Object::operator > (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* >= implementation                                                            */
+/********************************************************************************/
 bool Object::operator >= (const Object & O) const
 {
     try
@@ -313,6 +347,9 @@ bool Object::operator >= (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* + implementation                                                             */
+/********************************************************************************/
 Object Object::operator + (const Object & O) const
 {
     try
@@ -361,6 +398,9 @@ Object Object::operator + (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* - implementation                                                             */
+/********************************************************************************/
 Object Object::operator - (const Object & O) const
 {
     try
@@ -391,6 +431,9 @@ Object Object::operator - (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* * implementation                                                             */
+/********************************************************************************/
 Object Object::operator * (const Object & O) const
 {
     try
@@ -421,6 +464,9 @@ Object Object::operator * (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* / implementation                                                             */
+/********************************************************************************/
 Object Object::operator / (const Object & O) const
 {
     try
@@ -467,6 +513,9 @@ Object Object::operator / (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* % implementation                                                             */
+/********************************************************************************/
 Object Object::operator % (const Object & O) const
 {
     try
@@ -487,6 +536,12 @@ Object Object::operator % (const Object & O) const
     }
 }
 
+/********************************************************************************/
+/* Function: numberp                                                            */
+/* Parameters: const Object & O                                                 */
+/* Return type: bool                                                            */
+/* Description: Reads in an Object passed to it to determine if it is a number  */
+/********************************************************************************/
 bool numberp (const Object & O) 
 {
 	if (O.type == INT || O.type == REAL)
@@ -494,6 +549,12 @@ bool numberp (const Object & O)
 	return false;
 }
 
+/********************************************************************************/
+/* Function: symbolp                                                            */
+/* Parameters: const Object & O                                                 */
+/* Return type: bool                                                            */
+/* Description: Reads in an Object passed to it to determine if it's a symbol   */
+/********************************************************************************/
 bool symbolp (const Object & O) 
 {
 	if (O.type == STRING)
@@ -501,6 +562,12 @@ bool symbolp (const Object & O)
 	return false;
 }
 
+/********************************************************************************/
+/* Function: listp                                                              */
+/* Parameters: const Object & O                                                 */
+/* Return type: bool                                                            */
+/* Description: Reads in an Object passed to it to determine if it is a list    */
+/********************************************************************************/
 bool listp (const Object & O) 
 {
 	if (O.type == LIST)
@@ -508,6 +575,12 @@ bool listp (const Object & O)
 	return false;
 }
 
+/********************************************************************************/
+/* Function: zerop                                                              */
+/* Parameters: const Object & O                                                 */
+/* Return type: bool                                                            */
+/* Description: Reads in an Object passed to it to determine if it is zero      */
+/********************************************************************************/
 bool zerop (const Object & O) 
 {
     try
@@ -527,6 +600,12 @@ bool zerop (const Object & O)
     }
 }
 
+/********************************************************************************/
+/* Function: nullp                                                              */
+/* Parameters: const Object & O                                                 */
+/* Return type: bool                                                            */
+/* Description: Reads in an Object passed to it to determine if it's a null type*/
+/********************************************************************************/
 bool nullp (const Object & O) 
 {
 /*	if (O.type == INT && O.intval == 0)
@@ -541,6 +620,12 @@ bool nullp (const Object & O)
 	return false;
 }
 
+/********************************************************************************/
+/* Function: stringp                                                            */
+/* Parameters: const Object & O                                                 */
+/* Return type: bool                                                            */
+/* Description: Reads in an Object passed to it to determine if it's a string   */
+/********************************************************************************/
 bool stringp (const Object & O) 
 {
 	if (O.type == STRING)
@@ -548,6 +633,12 @@ bool stringp (const Object & O)
 	return false;
 }
 
+/********************************************************************************/
+/* Function: listop                                                             */
+/* Parameters: const string & S, const Object & O                               */
+/* Return type: Object                                                          */
+/* Description: Reads in a string and Object to parse a list type and return it */
+/********************************************************************************/
 Object listop (const string & S, const Object & O)
 {
     try
@@ -586,6 +677,13 @@ Object listop (const string & S, const Object & O)
     }
 }
 
+/********************************************************************************/
+/* Function: cons                                                               */
+/* Parameters: const Object & O1, const Object O2                               */
+/* Return type: Object                                                          */
+/* Description: Reads in two Objects to perform cons function on and returns    */
+/* the merged list                                                              */
+/********************************************************************************/
 Object cons (const Object & O1, const Object O2)
 {
     try
@@ -607,6 +705,13 @@ Object cons (const Object & O1, const Object O2)
     }
 }
 
+/********************************************************************************/
+/* Function: round                                                              */
+/* Parameters: const Object & O                                                 */
+/* Return type: Object                                                          */
+/* Description: Reads in an Object to round.  If the value is an int, it returns*/
+/* the object int value, if it's not an int, we add 0.5 and return it           */
+/********************************************************************************/
 Object round (const Object & O)
 {
     try
@@ -630,12 +735,24 @@ Object round (const Object & O)
     }
 }
 
+/********************************************************************************/
+/* Function: << operator                                                        */
+/* Parameters: ostream & outs, const Object & O                                 */
+/* Return type: ostream                                                         */
+/* Description: Takes the name value from the passed in Object and returns it   */
+/********************************************************************************/
 ostream & operator << (ostream & outs, const Object & O)
 {
 	outs << O.name;
 	return outs;
 }
 
+/********************************************************************************/
+/* Function: Object ss constructor                                              */
+/* Parameters: stringstream ss                                                  */
+/* Return type: None                                                            */
+/* Description: Reads in a stringstream to check balanced lists                 */
+/********************************************************************************/
 Object::Object (stringstream & ss)
 {
     try
@@ -688,6 +805,12 @@ Object::Object (stringstream & ss)
     }
 }
 
+/********************************************************************************/
+/* Function: MakeName                                                           */
+/* Parameters: None                                                             */
+/* Return type: void                                                            */
+/* Description: Sets the name variable based on the current Object type         */
+/********************************************************************************/
 void Object::MakeName ()
 {
 	stringstream ss;

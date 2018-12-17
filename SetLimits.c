@@ -1,3 +1,7 @@
+/********************************************************************************/
+/* CS460 P3 - Team1: Justin Moore, Robert Hubbell, Justin Bernard               */
+/********************************************************************************/
+
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <unistd.h>

@@ -19,7 +19,7 @@ CodeGenerator.o : CodeGenerator.cpp CodeGenerator.h
 clean : 
 	rm -f *.o P3.out *.gch *.lst *.dbg *.p* *~
 
-submit : Project3.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp makefile README.txt
+submit : Project3.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp CodeGenerator.h CodeGenerator.cpp makefile README.txt
 	rm -rf Team1P3
 	mkdir Team1P3
 	cp Project3.cpp Team1P3
@@ -27,6 +27,8 @@ submit : Project3.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.
 	cp LexicalAnalyzer.cpp Team1P3
 	cp SyntacticalAnalyzer.h Team1P3
 	cp SyntacticalAnalyzer.cpp Team1P3
+	cp CodeGenerator.h Team1P3
+	cp CodeGenerator.cpp Team1P3
 	cp makefile Team1P3
 	cp README.txt Team1P3
 	tar cfvz Team1P3.tgz Team1P3

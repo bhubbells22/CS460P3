@@ -1,3 +1,7 @@
+/********************************************************************************/
+/* CS460 Project 3 - Team 1: Justin Moore, Robert Hubbell, Justin Bernard       */
+/********************************************************************************/
+
 #include <iostream>
 #include <fstream>
 #include "CodeGenerator.h"

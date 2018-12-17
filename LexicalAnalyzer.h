@@ -1,11 +1,15 @@
 /*******************************************************************************
-* Assignment: Project 1 - Lexical Analyzer for Scheme to C++ Translator        *
-* Author: Dr. Watts                                                             *
+* Assignment: Project 3 - Lexical Analyzer for Scheme to C++ Translator        *
+* Author: Dr. Watts                                                            *
 * Date: Fall 2018                                                              *
 * File: LexicalAnalyzer.h                                                      *
 *                                                                              *
-* Description: This file contains the                                          *
+* Description: This file contains the Lexical Analyzer class functions and     *
+* variables                                                                    *
 *******************************************************************************/
+/********************************************************************************/
+/* CS460 Project 3 - Team 1: Justin Moore, Robert Hubbell, Justin Bernard       */
+/********************************************************************************/
 
 #ifndef LEX_H
 #define LEX_H
@@ -35,7 +39,7 @@ extern string token_names[];
 /*******************************************************************************
 * Class: Lexical_Analyzer                                                      *
 *                                                                              *
-* Description: This class is designed to                                       *
+* Description: This class is designed to parse and identify token types        *
 *******************************************************************************/
 
 class LexicalAnalyzer 

@@ -6,6 +6,9 @@
 *                                                                              *
 * Description: This file contains the                                          *
 *******************************************************************************/
+/********************************************************************************/
+/* CS460 P3 - Team1: Justin Moore, Robert Hubbell, Justin Bernard               */
+/********************************************************************************/
 
 #include <cstdlib>
 #include <iostream>
@@ -20,9 +23,7 @@ int main (int argc, char * argv[])
 		printf ("format: %s <filename>\n", argv[0]);
 		exit (1);
 	}
-/*
 	SetLimits ();
-*/
 	SyntacticalAnalyzer parse (argv[1]);
 
 	return 0;
