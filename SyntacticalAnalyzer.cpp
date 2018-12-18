@@ -35,6 +35,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
   returnVal = "";
   numLitsSeen = 0;
   savedOp = "";
+  assignToReturnVal = true; // when DISPLAY is encountered, this will be set false
   int errors = program();
 }
 
@@ -306,7 +307,8 @@ int SyntacticalAnalyzer::stmt()
     { // apply rule 8
       p2file << "Using Rule 8\n";
       lexeme = lex->GetLexeme();
-      gen->WriteCode(0, lexeme + "()");
+      //gen->WriteCode(0, lexeme + "()"); changes here
+      gen->WriteCode(0, lexeme); // changes here
       token = lex->GetToken();
     }
   else if (token == LPAREN_T)
@@ -723,6 +725,7 @@ int SyntacticalAnalyzer::action()
       break;
     case DISPLAY_T:
       p2file << "Using Rule 48\n";
+      assignToReturnVal = false; // changes here
       gen->WriteCode(0, "cout << ");
       token = lex->GetToken();
       errors += stmt();
@@ -740,6 +743,8 @@ int SyntacticalAnalyzer::action()
     case MODULO_T:
       p2file << "Using Rule 40\n";
       token = lex->GetToken();
+      if (assignToReturnVal) // changes here
+        gen->WriteCode(0, "returnVal = ");
       gen->WriteCode(0, "(");
       errors += stmt();
       gen->WriteCode(0, " % ");
@@ -765,6 +770,8 @@ int SyntacticalAnalyzer::action()
     case PLUS_T:
       p2file << "Using Rule 36\n";
       token = lex->GetToken();
+      if (assignToReturnVal) // changes here
+        gen->WriteCode(0, "returnVal = ");
       gen->WriteCode(0, "(");
       errors += stmt_list(" + ");
       gen->WriteCode(0, ")");
@@ -772,6 +779,8 @@ int SyntacticalAnalyzer::action()
     case MULT_T:
       p2file << "Using Rule 39\n";
       token = lex->GetToken();
+      if (assignToReturnVal) // changes here
+	gen->WriteCode(0, "returnVal = ");
       gen->WriteCode(0, "(");
       savedOp = " * ";
       errors += stmt_list(" * ");
@@ -825,6 +834,8 @@ int SyntacticalAnalyzer::action()
     case MINUS_T:
       p2file << "Using Rule 37\n";
       token = lex->GetToken();
+      if (assignToReturnVal) // changes here
+        gen->WriteCode(0, "returnVal = ");
       gen->WriteCode(0, "(");
       errors += stmt();
       gen->WriteCode(0, " - ");
@@ -834,6 +845,8 @@ int SyntacticalAnalyzer::action()
     case DIV_T:
       p2file << "Using Rule 38\n";
       token = lex->GetToken();
+      if (assignToReturnVal) // changes here
+        gen->WriteCode(0, "returnVal = ");
       gen->WriteCode(0, "(");
       errors += stmt();
       gen->WriteCode(0, " / ");
@@ -858,7 +871,8 @@ int SyntacticalAnalyzer::action()
     }
   tok = lex->GetTokenName(token);
   p2file << "Exiting Action function; current token is: " << tok << endl;
-  numLitsSeen = 0;
+  numLitsSeen = 0; // changes here
+  assignToReturnVal = true; // changes here
   return errors;
 }
 

@@ -56,6 +56,10 @@ class SyntacticalAnalyzer
 	// the seen operator for the extra operands in the list
 	int numLitsSeen;
 	string savedOp; // used with numLitsSeen, stores the operator we saw previously
+	// if we're looking at a line of scheme code that isn't enclosed in a call to
+	// (display ...) and we encounter arithmetic operators, then it's a line of
+	// code/calculations we'll want to assign the result to returnVal for
+	bool assignToReturnVal;
 };
 	
 #endif
