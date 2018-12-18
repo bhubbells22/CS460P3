@@ -42,6 +42,20 @@ class SyntacticalAnalyzer
 	int numStmtCalls;
 	int numTabs;
 	int ifCalls;
+	// squote is used in combination with lparen to verify whether we're
+	// evaluating a list of things to be printed.  Rather than encapsulating
+	// each quoted lit item as ("item1"), ("item2"), etc, it allows the whole
+	// list to be encapsulated (and printed) as "(item1 item2...itemN)"
+	bool squote;
+	bool lparen;
+	// used to hold onto the return type of a function and determine what kind
+	// of "return" statement to print
+	string returnVal;
+	// used to handle arithmetic scheme code where only one operator is seen
+	// with more than 2 operands.  Corresponding code will then know to repeat
+	// the seen operator for the extra operands in the list
+	int numLitsSeen;
+	string savedOp; // used with numLitsSeen, stores the operator we saw previously
 };
 	
 #endif

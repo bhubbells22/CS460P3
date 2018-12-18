@@ -17,7 +17,7 @@ CodeGenerator.o : CodeGenerator.cpp CodeGenerator.h
 	g++ -g -c CodeGenerator.cpp
 
 clean : 
-	rm -f *.o P3.out *.gch *.lst *.dbg *.p* *~
+	rm -f *.o *.out *.gch *.lst *.dbg *.p* *~
 
 submit : Project3.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp CodeGenerator.h CodeGenerator.cpp makefile README.txt
 	rm -rf Team1P3
@@ -29,6 +29,11 @@ submit : Project3.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.
 	cp SyntacticalAnalyzer.cpp Team1P3
 	cp CodeGenerator.h Team1P3
 	cp CodeGenerator.cpp Team1P3
+	cp Object.h Team1P3
+	cp Object.cpp Team1P3
+	cp SetLimits.h Team1P3
+	cp SetLimits.c Team1P3
+	cp SetLimits.cpp Team1P3
 	cp makefile Team1P3
 	cp README.txt Team1P3
 	tar cfvz Team1P3.tgz Team1P3

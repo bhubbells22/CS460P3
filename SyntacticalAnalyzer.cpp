@@ -30,6 +30,11 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
   numStmtCalls = 0;
   numTabs = 0;
   int ifCalls= 0;
+  squote = false;
+  lparen = false;
+  returnVal = "";
+  numLitsSeen = 0;
+  savedOp = "";
   int errors = program();
 }
 
@@ -171,15 +176,23 @@ int SyntacticalAnalyzer::define()
 	    {
 	      lexeme = lex-> GetLexeme();
 	      if(lexeme == "main")
-		gen->WriteCode(numTabs, "int " + lexeme + "(");
+		{
+		  returnVal = "0";
+		  gen->WriteCode(numTabs, "int " + lexeme + "(");
+		}
 	      else
-		gen->WriteCode(numTabs, "Object " + lexeme + "(");
+		{
+		  returnVal = "returnVal"; // changes here
+		  gen->WriteCode(numTabs, "Object " + lexeme + "(");
+		}
 	      token = lex->GetToken();
 	      errors += param_list(true);
 	      if (token == RPAREN_T)
 		{
 		  gen->WriteCode(numTabs,")\n{\n");
 		  numTabs++;
+		  if (returnVal != "0") // changes here
+		    gen->WriteCode(numTabs, "Object returnVal;\n"); // changes here
 		  token = lex->GetToken();
 		  numStmtCalls = 0;
 		  errors += stmt();
@@ -188,6 +201,7 @@ int SyntacticalAnalyzer::define()
 		  //gen->WriteCode(numTabs, ";\n");
 		  if (token == RPAREN_T)
 		    {
+		      gen->WriteCode(numTabs, "return " + returnVal + ";\n"); // changes here
 		      numTabs--;
 		      gen->WriteCode(numTabs, "}\n\n");
 		      token = lex->GetToken();
@@ -241,9 +255,21 @@ int SyntacticalAnalyzer::stmt_list(string op)
       || token == IDENT_T || token == LPAREN_T)
     { // apply rule 5
       p2file << "Using Rule 5\n";
-      errors += stmt();
-      gen->WriteCode(0, op);
-      errors += stmt_list("");
+      if (token == NUMLIT_T) // changes here
+	numLitsSeen++;
+      //errors += stmt();
+      //gen->WriteCode(0, op);
+      if (numLitsSeen <= 2) // changes here, added if-else
+	{
+	  errors += stmt();
+	  gen->WriteCode(0, op);
+	}
+      else
+	{
+	  gen->WriteCode(0, savedOp);
+	  errors += stmt();
+	}
+      errors += stmt_list(""); // changes here
     }
   else if (token == RPAREN_T)
     { // apply rule 6
@@ -339,7 +365,9 @@ int SyntacticalAnalyzer::literal()
     { // apply rule 12
       p2file << "Using Rule 12\n";
       token = lex ->GetToken();
+      squote = true;  // changes here
       errors += quoted_lit();
+      squote = false;  // changes here
     }
   else
     {
@@ -391,8 +419,11 @@ int SyntacticalAnalyzer::more_tokens()
   if (token >= IDENT_T && token <= LPAREN_T || token == SQUOTE_T)
     { // apply rule 14
       p2file << "Using Rule 14\n";
+      if (token == SQUOTE_T) // changes here
+	squote = true;
       errors += any_other_token();
       errors += more_tokens();
+      squote = false;
     }
   else if (token == RPAREN_T)
     { // apply rule 15
@@ -458,7 +489,10 @@ int SyntacticalAnalyzer::else_part()
       || token == IDENT_T || token == LPAREN_T)
     { // apply rule 18
       p2file << "Using Rule 18\n";
+      if (token == SQUOTE_T) // changes here
+	squote = true;
       errors += stmt();
+      squote = false;
     }
   else if (token == RPAREN_T)
     { // apply rule 19
@@ -521,14 +555,20 @@ int SyntacticalAnalyzer::stmt_pair_body()
       || token == IDENT_T || token == LPAREN_T)
     { // apply rule 22
       p2file << "Using Rule 22\n";
+      if (token == SQUOTE_T) // changes here
+	squote = true;
       errors += stmt();
+      squote = false;
       gen->WriteCode(0, ")\n");
       gen->WriteCode(numTabs++, "{\n");
       gen->WriteCode(numTabs, "");
       if (token == NUMLIT_T || token == STRLIT_T || token == SQUOTE_T
 	  || token == IDENT_T || token == LPAREN_T)
 	{
+	  if (token == SQUOTE_T) // changes here
+	    squote = true;
 	  errors += stmt();
+	  squote = false;
 	  gen->WriteCode(0, ";\n");
 	  gen->WriteCode(--numTabs, "}\n");
 	  if (token == RPAREN_T)
@@ -583,6 +623,7 @@ int SyntacticalAnalyzer::action()
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
   p2file << "Entering Action function; current token is: " << tok << ", lexeme: " << lexeme << endl;
   int errors = 0;
+  numLitsSeen = 0;
   switch(token)
     {
       
@@ -675,7 +716,8 @@ int SyntacticalAnalyzer::action()
     case ROUND_T:
       p2file << "Using Rule 41\n";
       token = lex->GetToken();
-      gen->WriteCode(0, "(round(");
+      gen->WriteCode(0, "round(");
+      //gen->WriteCode(0, "(round("); // changes here
       errors += stmt();
       gen->WriteCode(0, ")");
       break;
@@ -731,6 +773,7 @@ int SyntacticalAnalyzer::action()
       p2file << "Using Rule 39\n";
       token = lex->GetToken();
       gen->WriteCode(0, "(");
+      savedOp = " * ";
       errors += stmt_list(" * ");
       gen->WriteCode(0, ")");
       break;
@@ -815,6 +858,7 @@ int SyntacticalAnalyzer::action()
     }
   tok = lex->GetTokenName(token);
   p2file << "Exiting Action function; current token is: " << tok << endl;
+  numLitsSeen = 0;
   return errors;
 }
 
@@ -829,14 +873,22 @@ int SyntacticalAnalyzer::any_other_token()
   string tok = lex->GetTokenName(token), lexeme = lex->GetLexeme();
   p2file << "Entering Any_Other_Token function; current token is: " << tok << ", lexeme: " << lexeme << endl;
   int errors = 0;
+
+  if (squote && token == LPAREN_T)
+    lparen = true;
   if (token == LPAREN_T)
     { // apply rule 50
       p2file << "Using Rule 50\n";
       token = lex->GetToken();
       lexeme = lex->GetLexeme();
-      gen->WriteCode(0,"(\"" + lexeme);
+      //gen->WriteCode(0,"(\"" + lexeme); made change here, below
+      gen->WriteCode(0,"\"(" + lexeme);
+      if (squote)
+	token = lex->GetToken();
       errors += more_tokens();
-      gen->WriteCode(0, ")");
+      //gen->WriteCode(0, ")"); made changes below too
+      gen->WriteCode(0, ")\"");
+      lparen = false;
       if (token == RPAREN_T)
 	{
 	  token = lex->GetToken();
@@ -864,14 +916,19 @@ int SyntacticalAnalyzer::any_other_token()
       else if(token >= EQUALTO_T && token <= LTE_T)
 	p2file << "Using Rule " << token + 48 << endl;
       lexeme = lex->GetLexeme();
-      gen->WriteCode(numTabs, "(\"" + lexeme + "\")");
+      if (squote && lparen)
+	gen->WriteCode(0, " " + lexeme);
+      else
+	gen->WriteCode(numTabs, "(\"" + lexeme + "\")"); // changes here, and above
       token = lex->GetToken();
     }
   else if (token == SQUOTE_T)
     { // apply rule 79
       p2file << "Using Rule 79\n";
       token = lex->GetToken();
+      squote = true;
       errors += any_other_token();
+      squote = false;
     }
   else
     {
