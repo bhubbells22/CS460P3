@@ -37,6 +37,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
   savedOp = ""; // used with numLitsSeen, variable to hold the operator last seen
   assignToReturnVal = true; // when DISPLAY is encountered, this will be set false
   comingFromIfElse = false; // used with returnVal
+  rparen = false;
   int errors = program();
 }
 
@@ -366,8 +367,11 @@ int SyntacticalAnalyzer::literal()
   else if (token == STRLIT_T)
     { // apply rule 11
       p2file << "Using Rule 11\n";
+      if (comingFromIfElse)
+	gen->WriteCode(0, "returnVal = ");
       gen->WriteCode(0, "Object(" + lexeme + ")");
       token = lex->GetToken();
+      comingFromIfElse = false;
     }
   else if (token == SQUOTE_T)
     { // apply rule 12
@@ -701,28 +705,32 @@ int SyntacticalAnalyzer::action()
     case LISTP_T:
       p2file << "Using Rule 32\n";
       token = lex->GetToken();
-      gen->WriteCode(0, "(listp(");
+      //gen->WriteCode(0, "(listp("); // changes here
+      gen->WriteCode(0, "listp(");
       errors += stmt();
       gen->WriteCode(0, ")");
       break;
     case ZEROP_T:
       p2file << "Using Rule 33\n";
       token = lex->GetToken();
-      gen->WriteCode(0, "(zerop(");
+      //gen->WriteCode(0, "(zerop("); // changes here
+      gen->WriteCode(0, "zerop(");
       errors += stmt();
       gen->WriteCode(0, ")");
       break;
     case NULLP_T:
       p2file << "Using Rule 34\n";
       token = lex->GetToken();
-      gen->WriteCode(0, "(nullp(");
+      //gen->WriteCode(0, "(nullp("); // changes here
+      gen->WriteCode(0, "nullp(");
       errors += stmt();
       gen->WriteCode(0, ")");
       break;
     case STRINGP_T:
       p2file << "Using Rule 35\n";
       token = lex->GetToken();
-      gen->WriteCode(0, "(stringp(");
+      //gen->WriteCode(0, "(stringp("); //changes here
+      gen->WriteCode(0, "stringp(");
       errors += stmt();
       gen->WriteCode(0, ")");
       break;
@@ -911,12 +919,21 @@ int SyntacticalAnalyzer::any_other_token()
       token = lex->GetToken();
       lexeme = lex->GetLexeme();
       //gen->WriteCode(0,"(\"" + lexeme); made change here, below
-      gen->WriteCode(0,"\"(" + lexeme);
+      gen->WriteCode(0,"Object(\"(" + lexeme);
+      if (token == RPAREN_T) // changes here
+	{
+	  rparen = true;
+	  gen->WriteCode(0, "\"");
+	}
       if (squote)
 	token = lex->GetToken();
       errors += more_tokens();
       //gen->WriteCode(0, ")"); made changes below too
-      gen->WriteCode(0, ")\"");
+      if (rparen) // changes here
+	gen->WriteCode(0, ")");
+      else
+	gen->WriteCode(0, ")\")");
+      rparen = false;
       lparen = false;
       if (token == RPAREN_T)
 	{
@@ -951,7 +968,7 @@ int SyntacticalAnalyzer::any_other_token()
 	if (comingFromIfElse)
 	  gen->WriteCode(numTabs, "returnVal = Object(\"" + lexeme + "\")"); // changes here
 	else
-	  gen->WriteCode(numTabs, "(\"" + lexeme + "\")"); // changes here, and above
+	  gen->WriteCode(numTabs, "Object(\"" + lexeme + "\")"); // changes here, and above
       token = lex->GetToken();
     }
   else if (token == SQUOTE_T)

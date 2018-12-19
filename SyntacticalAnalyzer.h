@@ -63,6 +63,7 @@ class SyntacticalAnalyzer
 	// used with returnVal to determine when something within an if-else stmt needs
 	// to be assigned to returnVal
 	bool comingFromIfElse;
+	bool rparen;
 };
 	
 #endif
