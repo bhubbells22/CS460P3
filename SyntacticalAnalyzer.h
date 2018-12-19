@@ -65,6 +65,7 @@ class SyntacticalAnalyzer
 	bool comingFromIfElse;
 	bool rparen;
 	bool cameFromCond;
+	bool display;
 };
 	
 #endif
