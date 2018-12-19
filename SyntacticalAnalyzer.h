@@ -60,6 +60,9 @@ class SyntacticalAnalyzer
 	// (display ...) and we encounter arithmetic operators, then it's a line of
 	// code/calculations we'll want to assign the result to returnVal for
 	bool assignToReturnVal;
+	// used with returnVal to determine when something within an if-else stmt needs
+	// to be assigned to returnVal
+	bool comingFromIfElse;
 };
 	
 #endif

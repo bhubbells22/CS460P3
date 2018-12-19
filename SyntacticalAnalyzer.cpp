@@ -36,6 +36,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
   numLitsSeen = 0; // tracks NUMLITs to determine how to arrange arithmetic operations
   savedOp = ""; // used with numLitsSeen, variable to hold the operator last seen
   assignToReturnVal = true; // when DISPLAY is encountered, this will be set false
+  comingFromIfElse = false; // used with returnVal
   int errors = program();
 }
 
@@ -308,13 +309,18 @@ int SyntacticalAnalyzer::stmt()
       p2file << "Using Rule 8\n";
       lexeme = lex->GetLexeme();
       //gen->WriteCode(0, lexeme + "()"); changes here
-      gen->WriteCode(0, lexeme); // changes here
+      if (comingFromIfElse) // changes here
+	gen->WriteCode(0, "returnVal = " + lexeme);
+      else
+	gen->WriteCode(0, lexeme); // changes here
+      comingFromIfElse = false;
       token = lex->GetToken();
     }
   else if (token == LPAREN_T)
     { // apply rule 9
       p2file << "Using Rule 9\n";
       token = lex->GetToken();
+      comingFromIfElse = false;
       errors += action();
       
       if (token == RPAREN_T)
@@ -638,14 +644,17 @@ int SyntacticalAnalyzer::action()
       gen->WriteCode(0, ")\n");
       gen->WriteCode(numTabs++, "{\n");
       numStmtCalls = 0;
+      comingFromIfElse = true; // changes here
       errors += stmt();
       gen->WriteCode(0, "\n");
       gen->WriteCode(--numTabs, "}\n");
       gen->WriteCode(numTabs, "else\n");
       gen->WriteCode(numTabs++, "{\n");
+      comingFromIfElse = true;
       errors += else_part();
       gen->WriteCode(0, ";\n");
       gen->WriteCode(--numTabs, "}\n");
+      comingFromIfElse = false; // changes here
       break;
 
     case COND_T:
@@ -684,7 +693,8 @@ int SyntacticalAnalyzer::action()
     case NUMBERP_T:
       p2file << "Using Rule 31\n";
       token = lex->GetToken();
-      gen->WriteCode(0, "(numberp(");
+      //gen->WriteCode(0, "(numberp("); // changes here
+      gen->WriteCode(0, "numberp("); 
       errors += stmt();
       gen->WriteCode(0, ")");
       break;
@@ -938,7 +948,10 @@ int SyntacticalAnalyzer::any_other_token()
       if (squote && lparen)
 	gen->WriteCode(0, " " + lexeme);
       else
-	gen->WriteCode(numTabs, "(\"" + lexeme + "\")"); // changes here, and above
+	if (comingFromIfElse)
+	  gen->WriteCode(numTabs, "returnVal = Object(\"" + lexeme + "\")"); // changes here
+	else
+	  gen->WriteCode(numTabs, "(\"" + lexeme + "\")"); // changes here, and above
       token = lex->GetToken();
     }
   else if (token == SQUOTE_T)
