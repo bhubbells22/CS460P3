@@ -697,7 +697,8 @@ int SyntacticalAnalyzer::action()
       gen->WriteCode(0, "listop (\"" + lexeme + "\", ");
       token = lex->GetToken();
       errors += stmt();
-      gen->WriteCode(0, "))");
+      //gen->WriteCode(0, "))"); // changes here
+      gen->WriteCode(0, ")");
       break;
     case NOT_T:
       p2file << "Using Rule 30\n";
