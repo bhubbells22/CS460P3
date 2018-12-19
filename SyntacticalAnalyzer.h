@@ -64,6 +64,7 @@ class SyntacticalAnalyzer
 	// to be assigned to returnVal
 	bool comingFromIfElse;
 	bool rparen;
+	bool cameFromCond;
 };
 	
 #endif

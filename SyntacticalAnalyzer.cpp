@@ -38,6 +38,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
   assignToReturnVal = true; // when DISPLAY is encountered, this will be set false
   comingFromIfElse = false; // used with returnVal
   rparen = false;
+  cameFromCond = false;
   int errors = program();
 }
 
@@ -369,11 +370,11 @@ int SyntacticalAnalyzer::literal()
   else if (token == STRLIT_T)
     { // apply rule 11
       p2file << "Using Rule 11\n";
-      if (comingFromIfElse)
+      if (comingFromIfElse) // changes here
 	gen->WriteCode(0, "returnVal = ");
       gen->WriteCode(0, "Object(" + lexeme + ")");
       token = lex->GetToken();
-      comingFromIfElse = false;
+      comingFromIfElse = false; // changes here
     }
   else if (token == SQUOTE_T)
     { // apply rule 12
@@ -537,7 +538,9 @@ int SyntacticalAnalyzer::stmt_pair()
     { // apply rule 20
       p2file<< "Using Rule 20\n";
       token = lex->GetToken();
-      gen->WriteCode(numTabs, "else if(");
+      if (!cameFromCond || token == LPAREN_T) // changes here
+	gen->WriteCode(numTabs, "else if(");
+      //gen->WriteCode(numTabs, "else if(");
       errors += stmt_pair_body();
     }
   else if (token == RPAREN_T)
@@ -572,7 +575,7 @@ int SyntacticalAnalyzer::stmt_pair_body()
       if (token == SQUOTE_T) // changes here
 	squote = true;
       errors += stmt();
-      squote = false;
+      squote = false; // changes here
       gen->WriteCode(0, ")\n");
       gen->WriteCode(numTabs++, "{\n");
       gen->WriteCode(numTabs, "");
@@ -581,8 +584,9 @@ int SyntacticalAnalyzer::stmt_pair_body()
 	{
 	  if (token == SQUOTE_T) // changes here
 	    squote = true;
+	  comingFromIfElse = true; // changes here
 	  errors += stmt();
-	  squote = false;
+	  squote = false; // changes here
 	  gen->WriteCode(0, ";\n");
 	  gen->WriteCode(--numTabs, "}\n");
 	  if (token == RPAREN_T)
@@ -608,9 +612,12 @@ int SyntacticalAnalyzer::stmt_pair_body()
       gen->WriteCode(numTabs, "else\n");
       gen->WriteCode(numTabs++, "{\n");
       gen->WriteCode(numTabs, "");
+      if (token == NUMLIT_T) // changes here
+	gen->WriteCode(0, "returnVal = ");
       errors += stmt();
       gen->WriteCode(0, ";\n");
       gen->WriteCode(--numTabs, "}\n");
+      //cameFromCond = false; // changes here
       if (token == RPAREN_T)
 	{
 	  token = lex->GetToken();
@@ -669,9 +676,11 @@ int SyntacticalAnalyzer::action()
       token = lex->GetToken();
       if (token == LPAREN_T)
 	{
+	  cameFromCond = true; // changes here
 	  token = lex->GetToken();
 	  gen->WriteCode(numTabs, "if(");
 	  errors += stmt_pair_body();
+	  cameFromCond = false; // changes here
 	}
       else
 	{
