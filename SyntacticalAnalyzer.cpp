@@ -30,11 +30,11 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
   numStmtCalls = 0;
   numTabs = 0;
   int ifCalls= 0;
-  squote = false;
-  lparen = false;
-  returnVal = "";
-  numLitsSeen = 0;
-  savedOp = "";
+  squote = false; // used with lparen to determine how to arrange quoted lits
+  lparen = false; // if an lparen is found, quoted lit will be one big list, else not
+  returnVal = ""; // variable used to hold value of what a function will be returning
+  numLitsSeen = 0; // tracks NUMLITs to determine how to arrange arithmetic operations
+  savedOp = ""; // used with numLitsSeen, variable to hold the operator last seen
   assignToReturnVal = true; // when DISPLAY is encountered, this will be set false
   int errors = program();
 }
@@ -668,7 +668,8 @@ int SyntacticalAnalyzer::action()
     // apply rules 26, 30-35, 41, 48
     case LISTOP_T:
       p2file << "Using Rule 26\n";
-      gen->WriteCode(0, "(" + lexeme + " (");
+      //gen->WriteCode(0, "(" + lexeme + " ("); // changes here
+      gen->WriteCode(0, "listop (\"" + lexeme + "\", ");
       token = lex->GetToken();
       errors += stmt();
       gen->WriteCode(0, "))");
@@ -735,8 +736,12 @@ int SyntacticalAnalyzer::action()
     case CONS_T:
       p2file << "Using Rule 27\n";
       token = lex->GetToken();
-      gen->WriteCode(0, "(cons ");
+      if (assignToReturnVal)  // changes here
+	gen->WriteCode(0, "returnVal = ");
+      //gen->WriteCode(0, "(cons ");
+      gen->WriteCode(0, "cons ("); // changes here
       errors += stmt();
+      gen->WriteCode(0, ", "); // changes here
       errors += stmt();
       gen->WriteCode(0, ")");
       break;
