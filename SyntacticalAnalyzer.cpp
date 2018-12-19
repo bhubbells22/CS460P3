@@ -264,6 +264,8 @@ int SyntacticalAnalyzer::stmt_list(string op)
       //gen->WriteCode(0, op);
       if (numLitsSeen <= 2) // changes here, added if-else
 	{
+	  if (numLitsSeen == 2 && savedOp == " , ") // changes here
+	    gen->WriteCode(0, savedOp);
 	  errors += stmt();
 	  gen->WriteCode(0, op);
 	}
@@ -849,8 +851,10 @@ int SyntacticalAnalyzer::action()
       lexeme = lex->GetLexeme();
       gen->WriteCode(0, lexeme + "(");
       token = lex->GetToken();
+      savedOp = " , "; // changes here
       errors += stmt_list("");
       gen->WriteCode(0, ")");
+      savedOp = ""; // changes here
       break;
 
     // apply rules 37, 38
